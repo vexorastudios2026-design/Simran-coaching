@@ -1,0 +1,6 @@
+{
+  "name": "Simran Tution Classes",
+  "description": "Teacher-only tuition fee management, student tracking, monthly records, and reporting app for Simran Tution Classes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

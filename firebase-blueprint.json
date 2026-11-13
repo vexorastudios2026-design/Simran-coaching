@@ -1,0 +1,89 @@
+{
+  "entities": {
+    "Student": {
+      "title": "Student",
+      "description": "A student enrolled in Simran Tution Classes with monthly fee and joining details.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner teacher Firebase Auth UID." },
+        "name": { "type": "string", "description": "Student full name." },
+        "phone": { "type": "string", "description": "Parent or student contact phone number." },
+        "className": { "type": "string", "description": "Student class or grade (e.g., Class 8, Class 10)." },
+        "monthlyFeePaise": { "type": "integer", "description": "Current monthly tuition fee in integer paise (1 INR = 100 paise)." },
+        "joiningDate": { "type": "string", "description": "Joining date in ISO YYYY-MM-DD format." },
+        "joiningYearMonth": { "type": "string", "description": "Joining year-month in YYYY-MM format." },
+        "notes": { "type": "string", "description": "Optional teacher notes about the student." },
+        "active": { "type": "boolean", "description": "Whether student is currently active." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp of creation via FieldValue.serverTimestamp()." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp of last update via FieldValue.serverTimestamp()." }
+      },
+      "required": ["userId", "name", "phone", "className", "monthlyFeePaise", "joiningDate", "joiningYearMonth", "notes", "active", "createdAt", "updatedAt"]
+    },
+    "FeeRate": {
+      "title": "FeeRate",
+      "description": "Historical effective monthly fee rate for a student starting from a specific YYYY-MM month.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner teacher Firebase Auth UID." },
+        "studentId": { "type": "string", "description": "Referenced student document ID." },
+        "effectiveFrom": { "type": "string", "description": "Month from which this fee applies (YYYY-MM)." },
+        "monthlyFeePaise": { "type": "integer", "description": "Monthly fee in integer paise starting effectiveFrom." },
+        "note": { "type": "string", "description": "Optional reason for fee change." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp of creation." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp of last update." }
+      },
+      "required": ["userId", "studentId", "effectiveFrom", "monthlyFeePaise", "note", "createdAt", "updatedAt"]
+    },
+    "Payment": {
+      "title": "Payment",
+      "description": "An individual fee payment recorded for a student for a specific billing month.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner teacher Firebase Auth UID." },
+        "studentId": { "type": "string", "description": "Referenced student document ID." },
+        "studentNameSnapshot": { "type": "string", "description": "Student name at the time of payment for fast activity display." },
+        "amountPaise": { "type": "integer", "description": "Strictly positive payment amount in integer paise." },
+        "paymentDate": { "type": "string", "description": "Date payment was received (YYYY-MM-DD)." },
+        "forYearMonth": { "type": "string", "description": "Billing month this payment applies to (YYYY-MM)." },
+        "method": { "type": "string", "enum": ["Cash", "UPI", "Bank Transfer", "Card", "Cheque", "Other"], "description": "Payment mode." },
+        "note": { "type": "string", "description": "Optional payment remark." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp of creation." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp of last update." }
+      },
+      "required": ["userId", "studentId", "studentNameSnapshot", "amountPaise", "paymentDate", "forYearMonth", "method", "note", "createdAt", "updatedAt"]
+    },
+    "TeacherProfile": {
+      "title": "TeacherProfile",
+      "description": "Teacher settings and tuition branding profile.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner teacher Firebase Auth UID." },
+        "teacherName": { "type": "string", "description": "Teacher display name." },
+        "tuitionName": { "type": "string", "description": "Tuition class name." },
+        "teacherEmail": { "type": "string", "description": "Teacher verified Gmail address." },
+        "currencyCode": { "type": "string", "enum": ["INR"], "description": "Currency code (INR)." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp of creation." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp of last update." }
+      },
+      "required": ["userId", "teacherName", "tuitionName", "teacherEmail", "currencyCode", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/students/{studentId}": {
+      "schema": { "$ref": "#/entities/Student" },
+      "description": "Students managed by the authorized teacher."
+    },
+    "/users/{userId}/feeRates/{rateId}": {
+      "schema": { "$ref": "#/entities/FeeRate" },
+      "description": "Effective monthly fee rate history per student."
+    },
+    "/users/{userId}/payments/{paymentId}": {
+      "schema": { "$ref": "#/entities/Payment" },
+      "description": "Fee payment transactions recorded by the teacher."
+    },
+    "/users/{userId}/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/TeacherProfile" },
+      "description": "Teacher profile and tuition configuration."
+    }
+  }
+}

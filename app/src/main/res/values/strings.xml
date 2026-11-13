@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Simran Tution Classes</string>
+    <!-- Optional: Set Ma'am's exact Gmail address here (or via AUTHORIZED_TEACHER_EMAIL in .env / Secrets) -->
+    <string name="authorized_teacher_email" translatable="false"></string>
+</resources>
